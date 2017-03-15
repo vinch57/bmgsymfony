@@ -1,0 +1,66 @@
+{# listeGenres.html.twig #}
+
+{% extends "BMGgestBundle::layout.html.twig" %}
+{% block contenu %}
+    <div id="content">
+
+        {# affichage des messages flash #}
+        {% for flash_message in app.session.flashBag.get('error') %}
+            <div>
+                {{flash_message}}
+            </div>
+        {% endfor %}
+
+        {% for flash_message in app.session.flashBag.get('notice') %}
+            <div>
+                {{flash_message}}
+            </div>
+        {% endfor %}
+
+        <h2>Gestion des genres</h2>
+        <a href="{{path('bmg_ajouter_genre')}}" title="Ajouter">
+            Ajouter un genre
+        </a>
+        <div class="corps-form">
+            <!--- afficher la liste des genres -->
+            <fieldset>	
+                <legend>Genres</legend>
+                <div id="object-list">
+                    {% if lesGenres != NULL %}
+                        {% set nbGenres = lesGenres | length %}
+                        <span>{{nbGenres}} genre(s) trouvé(s)</span><br/><br/>
+                        {# ici le code d'affichage du tableau des genres #}
+                        {%if nbGenres > 0%}
+                            {# création du tableau #}
+                            <table>
+                                {# affichage de l'entete du tableau #}
+                                <tr>
+                                    {# création entete tableau avec noms de colonnes #}
+                                    <th>Code</th>
+                                    <th>Libellé</th>
+                                </tr>
+                                {# affichage des lignes du tableau #}
+                                {% set n = 0 %}
+                                {% for unGenre in lesGenres %}
+                                    {% if (n % 2) == 1 %}
+                                        <tr class="impair">
+                                        {% else %}
+                                        <tr class="pair">
+                                        {% endif %}
+                                        {% set id = unGenre.getCodeGenre() %}
+                                        <td><a href="{{path('bmg_consulter_genre', {'id':id})}}">{{id}}</a></td>
+                                        {# afficher les colonnes suivantes #}
+                                        <td>{{unGenre.getLibGenre()}}</td>
+                                    </tr>
+                                    {% set n = n+1 %}
+                                {% endfor %}
+                            </table>
+                        {% endif %}
+                    {% else %}
+                        Aucun genre trouvé !
+                    {% endif %}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+{% endblock %}
